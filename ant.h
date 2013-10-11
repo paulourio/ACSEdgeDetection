@@ -11,10 +11,12 @@ namespace acs {
 
 class Ant {
 public:
-	Ant(cv::Mat& image, cv::Mat& pheromone, Random& random);
+	Ant(cv::Point2i position, cv::Mat& image, cv::Mat& pheromone,
+			Random& random);
 
 	virtual ~Ant() = default;
 
+	cv::Point2i pos_;  // Current position
 private:
 	cv::Mat& image_;
 	cv::Mat& pheromone_;

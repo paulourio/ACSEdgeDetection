@@ -8,6 +8,7 @@
 
 #include "./ant.h"
 #include "./guicontroller.h"
+#include "./random.h"
 
 namespace acs {
 
@@ -16,7 +17,7 @@ namespace acs {
  */
 class ACSEdgeDetection {
 public:
-	ACSEdgeDetection(cv::Mat input, GUIController controller);
+	ACSEdgeDetection(cv::Mat& input, GUIController& controller);
 	virtual ~ACSEdgeDetection();
 
 	void Compute();
@@ -44,14 +45,17 @@ public:
 private:
 	void InitAnts();
 
-	cv::Mat image_;
+	void UpdateView();
+
+	cv::Mat& image_;
+	GUIController& controller_;
+
 	cv::Mat pheromone_;
-	GUIController controller_;
+	Random random_;
+	std::vector<Ant> ants_;
 
 	int ant_count_;
 	int max_cyles_;
-
-	std::vector<Ant> ants_;
 };
 
 }  // namespace acs
