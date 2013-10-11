@@ -2,8 +2,11 @@
 #ifndef ACS_H_
 #define ACS_H_
 
+#include <vector>
+
 #include <opencv2/core/core.hpp>
 
+#include "./ant.h"
 #include "./guicontroller.h"
 
 namespace acs {
@@ -22,10 +25,33 @@ public:
 		return pheromone_;
 	}
 
+	int ant_count() const {
+		return ant_count_;
+	}
+
+	void set_ant_count(int ants) {
+		ant_count_ = ants;
+	}
+
+	int max_cyles() const {
+		return max_cyles_;
+	}
+
+	void set_max_cyles(int cycles) {
+		max_cyles_ = cycles;
+	}
+
 private:
-	cv::Mat input_;
+	void InitAnts();
+
+	cv::Mat image_;
 	cv::Mat pheromone_;
 	GUIController controller_;
+
+	int ant_count_;
+	int max_cyles_;
+
+	std::vector<Ant> ants_;
 };
 
 }  // namespace acs

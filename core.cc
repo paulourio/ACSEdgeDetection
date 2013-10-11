@@ -23,6 +23,8 @@ void Core::Main() {
 	algorithm.Compute();
 
 	controller_.Wait();
+
+	// cv::imwrite(output_, algorithm.pheromone());
 }
 
 void Core::Init() {

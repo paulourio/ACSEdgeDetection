@@ -7,6 +7,9 @@ add_executable(EdgeDetector
 		main 
 		core
 		acs
+		ant
+		memory
+		random
         guicontroller
         guiview)
         
