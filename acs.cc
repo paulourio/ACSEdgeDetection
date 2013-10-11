@@ -4,7 +4,8 @@
 namespace acs {
 
 ACSEdgeDetection::ACSEdgeDetection(cv::Mat input, GUIController controller) :
-		input_(input), controller_(controller) {
+		input_(input), pheromone_(input.rows, input.cols, CV_8UC1), controller_(
+				controller) {
 }
 
 ACSEdgeDetection::~ACSEdgeDetection() {
