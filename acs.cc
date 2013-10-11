@@ -55,13 +55,12 @@ void ACSEdgeDetection::InitAnts() {
 		cv::Point2i start_pos(pos_x[i], pos_y[i]);
 		ants_.push_back(Ant(start_pos, image_, pheromone_, random_));
 	}
-
-	UpdateView();
 }
 
 void ACSEdgeDetection::UpdateView() {
 	cv::Mat img(image_.rows, image_.cols, CV_8UC3);
 
+	/* Translate the pheromone matrix into grayscale */
 	for (int i = 0; i < image_.rows; ++i) {
 		for (int j = 0; j < image_.cols; ++j) {
 			float tmp = pheromone_.at<float>(i, j) * 255.0f;
@@ -71,9 +70,9 @@ void ACSEdgeDetection::UpdateView() {
 			img.at<cv::Vec3b>(i, j) = cv::Vec3b(v, v, v);
 		}
 	}
-	for (auto a: ants_) {
-		img.at<cv::Vec3b>(a.pos_) = cv::Vec3b(0, 0, 254);
-	}
+	/* Paint the ants over the pheromone trails */
+	for (auto a: ants_)
+		img.at<cv::Vec3b>(a.pos()) = cv::Vec3b(0, 0, 254);
 	controller_.Update(img);
 }
 

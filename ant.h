@@ -16,8 +16,12 @@ public:
 
 	virtual ~Ant() = default;
 
-	cv::Point2i pos_;  // Current position
+	const cv::Point2i& pos() const {
+		return pos_;
+	}
+
 private:
+	cv::Point2i pos_;  // Current position
 	cv::Mat& image_;
 	cv::Mat& pheromone_;
 	Random& random_;
