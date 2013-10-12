@@ -14,7 +14,7 @@ const std::string kMainWindow("ACS");
 
 namespace acs {
 
-acs::GUIView::GUIView() {
+GUIView::GUIView() : View() {
 	CreateWidgets();
 }
 

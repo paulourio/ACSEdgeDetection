@@ -4,6 +4,7 @@
 
 #include <opencv2/core/core.hpp>
 
+#include "./global.h"
 #include "./guicontroller.h"
 
 namespace acs {
@@ -23,6 +24,8 @@ private:
 	const char* output_;
 	acs::GUIController controller_;
 	cv::Mat image_; /* Input image */
+
+	DISALLOW_COPY_AND_ASSIGN(Core);
 };
 
 }  // namespace acs

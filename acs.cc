@@ -14,10 +14,6 @@
 namespace acs {
 
 /* Paper's constants */
-static const float kAlpha = 2.5f;
-static const float kBeta = 2.0f;
-static const float kRho = 0.04;
-static const float kB = 0.08;
 static const float kTmin = 0.0001;  // Pheromone threshold minimum value.
 
 ACSEdgeDetection::ACSEdgeDetection(cv::Mat& image, GUIController& controller) :
@@ -35,7 +31,7 @@ ACSEdgeDetection::~ACSEdgeDetection() {
 void ACSEdgeDetection::Compute() {
 	InitAnts();
 	for (int c = 0; c < max_cyles(); ++c) {
-		for (auto a: ants_)
+		for (auto& a: ants_)
 			a.move();
 	}
 	UpdateView();
@@ -56,9 +52,12 @@ void ACSEdgeDetection::InitAnts() {
 	std::shuffle(pos_x.begin(), pos_x.end(), random_.engine());
 	std::shuffle(pos_y.begin(), pos_y.end(), random_.engine());
 
+	uchar tmp = *std::max_element(image_.begin<uchar>(), image_.end<uchar>());
+	float imax = static_cast<float>(tmp);
+
 	for (int i = 0; i < ant_count_; ++i) {
 		cv::Point2i start_pos(pos_x[i], pos_y[i]);
-		ants_.push_back(Ant(start_pos, image_, pheromone_, random_));
+		ants_.push_back(Ant(start_pos, image_, pheromone_, random_, imax));
 	}
 }
 
@@ -76,7 +75,7 @@ void ACSEdgeDetection::UpdateView() {
 		}
 	}
 	/* Paint the ants over the pheromone trails */
-	for (auto a: ants_)
+	for (auto& a: ants_)
 		img.at<cv::Vec3b>(a.pos()) = cv::Vec3b(0, 0, 254);
 	controller_.Update(img);
 }

@@ -8,7 +8,7 @@
 
 namespace acs {
 
-GUIController::GUIController() {
+GUIController::GUIController() : Controller() {
 	view_.set_controller(this);
 }
 

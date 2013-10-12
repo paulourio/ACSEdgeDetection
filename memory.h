@@ -6,6 +6,7 @@
 
 #include <opencv2/core/core.hpp>
 
+#include "./global.h"
 #include "./random.h"
 
 namespace acs {
@@ -31,6 +32,8 @@ private:
 	Random& random_;
 	std::deque<cv::Point2i> memory_;
 	int memory_capacity_;
+
+	DISALLOW_COPY_AND_ASSIGN(Memory);
 };
 
 }  // namespace acs

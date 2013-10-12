@@ -2,6 +2,8 @@
 #ifndef CONTROLLER_H_
 #define CONTROLLER_H_
 
+#include "./global.h"
+
 namespace acs {
 
 /**
@@ -9,7 +11,12 @@ namespace acs {
  */
 class Controller {
 public:
+	Controller() = default;
+
 	virtual ~Controller() = default;
+
+private:
+	DISALLOW_COPY_AND_ASSIGN(Controller);
 };
 
 }  // namespace acs

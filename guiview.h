@@ -4,6 +4,7 @@
 
 #include <opencv2/core/core.hpp>
 
+#include "./global.h"
 #include "./view.h"
 
 namespace acs {
@@ -31,6 +32,8 @@ private:
 	void CreateWidgets();
 
 	cv::Mat image_;
+
+	DISALLOW_COPY_AND_ASSIGN(GUIView);
 };
 
 }  // namespace acs

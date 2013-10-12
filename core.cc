@@ -18,7 +18,7 @@ Core::Core(const char* input, const char* output) :
 
 void Core::Main() {
 	controller_.Update(image_);
-	cv::waitKey(5000);
+	cv::waitKey(500);
 
 	ACSEdgeDetection algorithm(image_, controller_);
 	algorithm.Compute();

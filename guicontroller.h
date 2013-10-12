@@ -3,6 +3,7 @@
 #define GUICONTROLLER_H_
 
 #include "./controller.h"
+#include "./global.h"
 #include "./guiview.h"
 
 namespace acs {
@@ -22,6 +23,8 @@ public:
 
 private:
 	GUIView view_;
+
+	DISALLOW_COPY_AND_ASSIGN(GUIController);
 };
 
 }  // namespace acs

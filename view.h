@@ -2,6 +2,8 @@
 #ifndef VIEW_H_
 #define VIEW_H_
 
+#include "./global.h"
+
 namespace acs {
 
 class Controller;
@@ -12,6 +14,10 @@ class Controller;
  */
 class View {
 public:
+	View() :
+			controller_(NULL) {
+	}
+
 	virtual ~View() = default;
 
 	/**
@@ -32,6 +38,8 @@ public:
 
 private:
 	Controller* controller_;
+
+	DISALLOW_COPY_AND_ASSIGN(View);
 };
 
 }  // namespace acs

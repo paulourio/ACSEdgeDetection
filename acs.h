@@ -7,6 +7,7 @@
 #include <opencv2/core/core.hpp>
 
 #include "./ant.h"
+#include "./global.h"
 #include "./guicontroller.h"
 #include "./random.h"
 
@@ -56,6 +57,8 @@ private:
 
 	int ant_count_;
 	int max_cyles_;
+
+	DISALLOW_COPY_AND_ASSIGN(ACSEdgeDetection);
 };
 
 }  // namespace acs
