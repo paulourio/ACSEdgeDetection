@@ -18,7 +18,7 @@ static const float kAlpha = 2.5f;
 static const float kBeta = 2.0f;
 static const float kRho = 0.04;
 static const float kB = 0.08;
-static const float kTmin = 0.001;  // Pheromone threshold minimum value.
+static const float kTmin = 0.0001;  // Pheromone threshold minimum value.
 
 ACSEdgeDetection::ACSEdgeDetection(cv::Mat& image, GUIController& controller) :
 		image_(image), controller_(controller), pheromone_(image.rows,
@@ -34,6 +34,11 @@ ACSEdgeDetection::~ACSEdgeDetection() {
 
 void ACSEdgeDetection::Compute() {
 	InitAnts();
+	for (int c = 0; c < max_cyles(); ++c) {
+		for (auto a: ants_)
+			a.move();
+	}
+	UpdateView();
 }
 
 void ACSEdgeDetection::InitAnts() {

@@ -13,4 +13,9 @@ Ant::Ant(cv::Point2i position, cv::Mat& image, cv::Mat& pheromone,
 				random_, image.cols) {
 }
 
+void Ant::move() {
+	//for (int i = -1; i <= +1l ++i)
+}
+
 }  // namespace acs
+

@@ -20,6 +20,8 @@ public:
 		return pos_;
 	}
 
+	void move();
+
 private:
 	cv::Point2i pos_;  // Current position
 	cv::Mat& image_;
