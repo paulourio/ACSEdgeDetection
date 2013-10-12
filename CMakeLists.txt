@@ -16,7 +16,7 @@ add_executable(EdgeDetector
 set(CMAKE_CXX_COMPILER clang++)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -std=c++11 -g")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -std=c++11")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -O3 -march=native -std=c++11")
 
 target_link_libraries(EdgeDetector ${OpenCV_LIBS})
 target_link_libraries(EdgeDetector ${CMAKE_THREAD_LIBS_INIT})

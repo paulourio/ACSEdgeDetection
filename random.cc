@@ -9,14 +9,14 @@ Random::Random() {
 	set_seed(time(NULL));
 }
 
-void Random::GenerateChoices(int choices, float* output) {
+void Random::GenerateChoices(int choices, double* output) {
 	if (choices <= 0)
 		return;
 	for (int i = 0; i < choices; ++i)
 		output[i] = next();
 }
 
-float Random::next() {
+double Random::next() {
 	return distribution_(mersenne_engine_);
 }
 

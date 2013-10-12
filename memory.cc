@@ -5,28 +5,33 @@
 
 namespace acs {
 
-Memory::Memory(Random& random, int image_size) : random_(random) {
+Memory::Memory(Random* random, int image_size) :
+		random_(random) {
 	Init(image_size);
 }
 
-float Memory::GetA(int image_size) const {
+double Memory::GetA(int image_size) const {
 	if (image_size > 512)
-		return 10.0f;
+		return 10.0;
 	if (image_size > 256)
-		return 20.0f;
+		return 20.0;
 	if (image_size > 128)
-		return 30.0f;
-	return 40.0f;
+		return 30.0;
+	return 40.0;
 }
 
 void Memory::push(cv::Point2i point) {
 	memory_.push_back(point);
-	if (memory_.size() > 0)
+	if (memory_.size() > memory_capacity_)
 		memory_.pop_front();
 }
 
-bool Memory::contains(cv::Point2i point) {
+bool Memory::contains(cv::Point2i point) const {
 	return std::find(memory_.begin(), memory_.end(), point) != memory_.end();
+}
+
+void Memory::clear() {
+	memory_.clear();
 }
 
 /*
@@ -34,10 +39,11 @@ bool Memory::contains(cv::Point2i point) {
  * an interval defined by the "A" function.
  */
 void Memory::Init(int image_size) {
-	float A = GetA(image_size);
-	float size = A * (0.85f + random_.next() * 0.30f);
+	double A = GetA(image_size);
+	double size = A * (0.85 + random_->next() * 0.29);
 
 	memory_capacity_ = static_cast<int>(std::floor(size));
 }
 
 }  // namespace acs
+

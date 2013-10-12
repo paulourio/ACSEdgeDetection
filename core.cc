@@ -20,7 +20,7 @@ void Core::Main() {
 	controller_.Update(image_);
 	cv::waitKey(500);
 
-	ACSEdgeDetection algorithm(image_, controller_);
+	ACSEdgeDetection algorithm(image_, &controller_);
 	algorithm.Compute();
 
 	controller_.Wait();

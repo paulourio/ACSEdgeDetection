@@ -2,9 +2,9 @@
 #ifndef ACS_H_
 #define ACS_H_
 
-#include <vector>
-
 #include <opencv2/core/core.hpp>
+
+#include <vector>
 
 #include "./ant.h"
 #include "./global.h"
@@ -18,8 +18,9 @@ namespace acs {
  */
 class ACSEdgeDetection {
 public:
-	ACSEdgeDetection(cv::Mat& input, GUIController& controller);
-	virtual ~ACSEdgeDetection();
+	ACSEdgeDetection(const cv::Mat& input, GUIController* controller);
+
+	virtual ~ACSEdgeDetection() = default;
 
 	void Compute();
 
@@ -46,10 +47,13 @@ public:
 private:
 	void InitAnts();
 
-	void UpdateView();
+	void UpdatePheromoneTrail();
 
-	cv::Mat& image_;
-	GUIController& controller_;
+	void UpdateView();
+	void UpdateFinalView();
+
+	const cv::Mat& image_;
+	GUIController* controller_;
 
 	cv::Mat pheromone_;
 	Random random_;

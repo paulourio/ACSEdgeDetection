@@ -14,14 +14,15 @@ const std::string kMainWindow("ACS");
 
 namespace acs {
 
-GUIView::GUIView() : View() {
+GUIView::GUIView() :
+		View() {
 	CreateWidgets();
 }
 
 void GUIView::CreateWidgets() {
 	cv::namedWindow(kMainWindow, CV_WINDOW_NORMAL);
-	 cv::setWindowProperty(kMainWindow, CV_WND_PROP_FULLSCREEN,
-			 CV_WINDOW_FULLSCREEN);
+	cv::setWindowProperty(kMainWindow, CV_WND_PROP_FULLSCREEN,
+			CV_WINDOW_FULLSCREEN);
 }
 
 void acs::GUIView::WaitKey() const {

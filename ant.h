@@ -12,8 +12,8 @@ namespace acs {
 
 class Ant {
 public:
-	Ant(cv::Point2i position, cv::Mat& image, cv::Mat& pheromone,
-			Random& random, float imax);
+	Ant(cv::Point2i position, const cv::Mat& image, const cv::Mat& pheromone,
+			Random* random, double imax);
 
 	Ant(const Ant& ant);
 
@@ -23,20 +23,33 @@ public:
 		return pos_;
 	}
 
+	const Memory& memory() const {
+		return memory_;
+	}
+
 	void move();
 
+	double HeuristicInformation(cv::Point2i p) const;
+
 private:
-	float Probability(cv::Point2i p) const;
-	float HeuristicInformation(cv::Point2i p) const;
+	double Probability(cv::Point2i p) const;
+
+	/* Return either a true pixel of a shadow, if p is not inside the bounds */
+	double ShadowedPixel(const cv::Point2i& p) const;
+	double Variation(const cv::Point2i& p, int x1, int y1, int x2,
+			int y2) const;
+	bool IsValidPoint(const cv::Point2i& p) const;
+
+	void set_pos(cv::Point2i position);
+
+	void operator =(const Ant&) = delete;
 
 	cv::Point2i pos_;  // Current position
-	cv::Mat& image_;
-	cv::Mat& pheromone_;
-	Random& random_;
+	const cv::Mat& image_;
+	const cv::Mat& pheromone_;
+	Random* random_;
 	Memory memory_;
-	float imax_;
-
-	void operator =(const Ant&);
+	double imax_;
 };
 
 }  // namespace acs

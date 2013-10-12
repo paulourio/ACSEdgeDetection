@@ -1,40 +1,45 @@
 /* Copyright 2013 Paulo Roberto Urio <paulourio@gmail.com> */
 #include "./acs.h"
 
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
 #include <cmath>
 
 #include <algorithm>
-#include <iostream>
 #include <vector>
-
-#include <opencv2/imgproc/imgproc.hpp>
 
 #include "./ant.h"
 
 namespace acs {
 
-/* Paper's constants */
-static const float kTmin = 0.0001;  // Pheromone threshold minimum value.
+static const double kRho = 0.01;
+static const double kB = 0.08;
 
-ACSEdgeDetection::ACSEdgeDetection(cv::Mat& image, GUIController& controller) :
-		image_(image), controller_(controller), pheromone_(image.rows,
-				image.cols, CV_32FC1) {
+/* Paper's constants */
+static const double kTmin = 0.0001;  // Pheromone threshold minimum value.
+
+ACSEdgeDetection::ACSEdgeDetection(const cv::Mat& image,
+		GUIController* controller) :
+				image_(image),
+				controller_(controller),
+				pheromone_(image.rows, image.cols, CV_64FC1) {
 	int m = static_cast<int>(std::sqrt(image.rows * image.cols));
 	set_ant_count(m);
-	set_max_cyles(m);
+	set_max_cyles(m * 2.0);
 	pheromone_ = kTmin;
-}
-
-ACSEdgeDetection::~ACSEdgeDetection() {
 }
 
 void ACSEdgeDetection::Compute() {
 	InitAnts();
 	for (int c = 0; c < max_cyles(); ++c) {
-		for (auto& a: ants_)
+		for (auto& a : ants_)
 			a.move();
+		UpdatePheromoneTrail();
+		UpdateView();
 	}
-	UpdateView();
+	cv::waitKey(0);
+	UpdateFinalView();
 }
 
 void ACSEdgeDetection::InitAnts() {
@@ -53,31 +58,66 @@ void ACSEdgeDetection::InitAnts() {
 	std::shuffle(pos_y.begin(), pos_y.end(), random_.engine());
 
 	uchar tmp = *std::max_element(image_.begin<uchar>(), image_.end<uchar>());
-	float imax = static_cast<float>(tmp);
+	double imax = static_cast<double>(tmp);
 
 	for (int i = 0; i < ant_count_; ++i) {
 		cv::Point2i start_pos(pos_x[i], pos_y[i]);
-		ants_.push_back(Ant(start_pos, image_, pheromone_, random_, imax));
+		ants_.push_back(Ant(start_pos, image_, pheromone_, &random_, imax));
+	}
+}
+
+void ACSEdgeDetection::UpdatePheromoneTrail() {
+	for (int i = 0; i < image_.rows; ++i) {
+		for (int j = 0; j < image_.cols; ++j) {
+			cv::Point2i p(j, i);
+			double old = (1.0 - kRho) * pheromone_.at<double>(p);
+			double delta = 0.0;
+			double h = ants_.front().HeuristicInformation(p);
+			if (h < kB)
+				continue;
+			for (auto& a : ants_)
+				if (a.pos() == p)
+					delta += h;
+			double np = old + delta;
+			pheromone_.at<double>(p) = (np > kTmin) ? np : kTmin;
+		}
 	}
 }
 
 void ACSEdgeDetection::UpdateView() {
 	cv::Mat img(image_.rows, image_.cols, CV_8UC3);
 
+	double max = cv::mean(pheromone_)[0];
+
 	/* Translate the pheromone matrix into grayscale */
 	for (int i = 0; i < image_.rows; ++i) {
 		for (int j = 0; j < image_.cols; ++j) {
-			float tmp = pheromone_.at<float>(i, j) * 255.0f;
-			if (tmp > 254.0f)
-				tmp = 254.0f;
-			int v = 254 -  static_cast<int>(tmp);
+			double tmp = pheromone_.at<double>(i, j) / max * 255.0;
+			if (tmp > 255)
+				tmp = 255;
+			int v = 255 - static_cast<int>(tmp);
 			img.at<cv::Vec3b>(i, j) = cv::Vec3b(v, v, v);
 		}
 	}
 	/* Paint the ants over the pheromone trails */
-	for (auto& a: ants_)
+	for (auto& a : ants_)
 		img.at<cv::Vec3b>(a.pos()) = cv::Vec3b(0, 0, 254);
-	controller_.Update(img);
+	controller_->Update(img);
+}
+
+void ACSEdgeDetection::UpdateFinalView() {
+	cv::Mat img(image_.rows, image_.cols, CV_8UC1);
+
+	for (int i = 0; i < image_.rows; ++i) {
+		for (int j = 0; j < image_.cols; ++j) {
+			double tmp = pheromone_.at<double>(i, j);
+			if (tmp > kB)
+				img.at<uchar>(i, j) = 0;
+			else
+				img.at<uchar>(i, j) = 255;
+		}
+	}
+	controller_->Update(img);
 }
 
 }  // namespace acs
