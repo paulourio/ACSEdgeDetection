@@ -18,14 +18,14 @@ Core::Core(const char* input, const char* output) :
 
 void Core::Main() {
 	controller_.Update(image_);
-	cv::waitKey(2000);
+	cv::waitKey(5000);
 
 	ACSEdgeDetection algorithm(image_, &controller_);
 	algorithm.Compute();
 
 	controller_.Wait();
 
-	// cv::imwrite(output_, algorithm.pheromone());
+	cv::imwrite(output_, algorithm.output());
 }
 
 void Core::Init() {

@@ -13,7 +13,7 @@
 
 namespace acs {
 
-static const double kRho = 0.01;
+static const double kRho = 0.04;
 static const double kB = 0.08;
 
 /* Paper's constants */
@@ -25,18 +25,20 @@ ACSEdgeDetection::ACSEdgeDetection(const cv::Mat& image,
 				controller_(controller),
 				pheromone_(image.rows, image.cols, CV_64FC1) {
 	int m = static_cast<int>(std::sqrt(image.rows * image.cols));
-	set_ant_count(m);
-	set_max_cyles(m * 2.0);
+	set_ant_count(m * 10.0);
+	set_max_cyles(m);
 	pheromone_ = kTmin;
 }
 
 void ACSEdgeDetection::Compute() {
 	InitAnts();
-	for (int c = 0; c < max_cyles(); ++c) {
+	for (int c = 0; c < max_cycles(); ++c) {
+		printf("\r%3d/%3d", c, max_cycles());
+		fflush(stdout);
 		for (auto& a : ants_)
 			a.move();
 		UpdatePheromoneTrail();
-		UpdateView();
+		// UpdateView();
 	}
 	cv::waitKey(0);
 	UpdateFinalView();
@@ -122,6 +124,7 @@ void ACSEdgeDetection::UpdateFinalView() {
 				img.at<uchar>(i, oj) = 255;
 		}
 	}
+	output_ = img;
 	controller_->Update(img);
 }
 

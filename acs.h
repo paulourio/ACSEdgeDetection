@@ -28,6 +28,10 @@ public:
 		return pheromone_;
 	}
 
+	cv::Mat output() const {
+		return output_;
+	}
+
 	int ant_count() const {
 		return ant_count_;
 	}
@@ -36,7 +40,7 @@ public:
 		ant_count_ = ants;
 	}
 
-	int max_cyles() const {
+	int max_cycles() const {
 		return max_cyles_;
 	}
 
@@ -56,6 +60,7 @@ private:
 	GUIController* controller_;
 
 	cv::Mat pheromone_;
+	cv::Mat output_;
 	Random random_;
 	std::vector<Ant> ants_;
 
