@@ -50,7 +50,10 @@ void ACSEdgeDetection::InitAnts() {
 	pos_x.reserve(ant_count_);
 	pos_y.reserve(ant_count_);
 
-	for (int i = 0; i < ant_count_; ++i) {
+	int values = ant_count_;
+	if (values > image_.rows || values > image_.cols)
+		values = std::max(image_.rows, image_.cols) * 2;
+	for (int i = 0; i < values; ++i) {
 		pos_x.push_back(i % image_.rows);
 		pos_y.push_back(i % image_.cols);
 	}
@@ -73,11 +76,10 @@ void ACSEdgeDetection::UpdatePheromoneTrail() {
 			double old = (1.0 - kRho) * pheromone_.at<double>(p);
 			double delta = 0.0;
 			double h = ants_.front().HeuristicInformation(p);
-			if (h < kB)
-				continue;
-			for (auto& a : ants_)
-				if (a.pos() == p)
-					delta += h;
+			if (h >= kB)
+				for (auto& a : ants_)
+					if (a.pos() == p)
+						delta += h;
 			double np = old + delta;
 			pheromone_.at<double>(p) = (np > kTmin) ? np : kTmin;
 		}
@@ -106,15 +108,18 @@ void ACSEdgeDetection::UpdateView() {
 }
 
 void ACSEdgeDetection::UpdateFinalView() {
-	cv::Mat img(image_.rows, image_.cols, CV_8UC1);
+	cv::Mat img(image_.rows, image_.cols * 2, CV_8UC1);
 
 	for (int i = 0; i < image_.rows; ++i) {
 		for (int j = 0; j < image_.cols; ++j) {
+			img.at<uchar>(i, j) = image_.at<uchar>(i, j);
+
 			double tmp = pheromone_.at<double>(i, j);
+			int oj = image_.cols + j;
 			if (tmp > kB)
-				img.at<uchar>(i, j) = 0;
+				img.at<uchar>(i, oj) = 0;
 			else
-				img.at<uchar>(i, j) = 255;
+				img.at<uchar>(i, oj) = 255;
 		}
 	}
 	controller_->Update(img);

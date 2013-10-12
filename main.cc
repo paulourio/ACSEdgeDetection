@@ -5,12 +5,13 @@
 #include "./core.h"
 
 int main(int argc, const char** argv) {
-	if (argc != 3) {
+	if (argc < 2) {
 		fprintf(stderr, "Syntax: %s input.jpg output.jpg\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
+	const char* out = (argc == 3) ? argv[2]: NULL;
 
-	acs::Core core(argv[1], argv[2]);
+	acs::Core core(argv[1], out);
 	core.Main();
 	return 0;
 }
