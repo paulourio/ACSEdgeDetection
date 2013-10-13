@@ -24,9 +24,9 @@ ACSEdgeDetection::ACSEdgeDetection(const cv::Mat& image,
 				image_(image),
 				controller_(controller),
 				pheromone_(image.rows, image.cols, CV_64FC1) {
-	int m = static_cast<int>(std::sqrt(image.rows * image.cols));
+	int m = static_cast<int>(std::max(image.rows, image.cols));
 	set_ant_count(m * 10.0);
-	set_max_cyles(m);
+	set_max_cyles(m / 2.0);
 	pheromone_ = kTmin;
 }
 
@@ -38,7 +38,7 @@ void ACSEdgeDetection::Compute() {
 		for (auto& a : ants_)
 			a.move();
 		UpdatePheromoneTrail();
-		// UpdateView();
+		UpdateView();
 	}
 	cv::waitKey(0);
 	UpdateFinalView();

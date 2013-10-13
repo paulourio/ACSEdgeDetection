@@ -41,6 +41,7 @@ Ant::Ant(const Ant& ant) :
 }
 
 void Ant::move() {
+	for (int step = 0; step < 70; ++step){
 	double total = 0.0;
 	std::vector<Move> moves;
 
@@ -83,7 +84,7 @@ void Ant::move() {
 		}
 		++move;
 	}
-	set_pos(moves.back().point);
+	set_pos(moves.back().point);}
 }
 
 void Ant::set_pos(cv::Point2i position) {
@@ -108,6 +109,12 @@ double Ant::HeuristicInformation(cv::Point2i p) const {
 	m = std::max(m, Variation(p, -1, +1, +1, -1));
 	m = std::max(m, Variation(p, 0, +1, 0, -1));
 	m = std::max(m, Variation(p, -1, 0, +1, 0));
+
+	// m = std::max(m, Variation(p, -2, -1, +2, +1));
+	// m = std::max(m, Variation(p, -2, +1, +2, -1));
+	// m = std::max(m, Variation(p, -1, -2, +1, +2));
+	// m = std::max(m, Variation(p, +1, -2, -1, +2));
+
 	double ret = m / imax_;
 	if (std::isinf(ret))
 		return 0.1e-10;

@@ -25,7 +25,8 @@ void Core::Main() {
 
 	controller_.Wait();
 
-	cv::imwrite(output_, algorithm.output());
+	if (output_ != NULL)
+		cv::imwrite(output_, algorithm.output());
 }
 
 void Core::Init() {
