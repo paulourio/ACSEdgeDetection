@@ -41,7 +41,7 @@ Ant::Ant(const Ant& ant) :
 }
 
 void Ant::move() {
-	for (int step = 0; step < 70; ++step){
+	for (int step = 0; step < 1; ++step){
 	double total = 0.0;
 	std::vector<Move> moves;
 
